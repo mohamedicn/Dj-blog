@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %} 
+    <div class="user">
+        {% for profile in profiles %}
+            <div class="main">
+                <div class="img">
+                    <a href="">
+                        {% if profile.image %}
+                            <a href="{% url 'blog:blog_user' profile.slug %}"><img src="{{profile.image.url}}" alt="#"></a>
+                        {% else %}
+                            <a href="{% url 'blog:blog_user' profile.slug %}"><img src="{% static 'img/user_no_image.png' %}" alt="#"></a>
+                        {% endif %}
+                    </a>
+                </div>
+                <div class="content">
+                    <div class="all-text">
+                        <h5 style="    font-size: 11px;" class="content-text"> @ {{profile.user.username}}</h5>
+                        <h5 class="content-main"> <a href="{% url 'blog:blog_user' profile.slug %}" style="color: #eee;">{{profile.user.first_name}} {{profile.user.last_name}}</a></h5>
+                        <div class="categry">
+                            {% if profile.facebook %}
+                                <a href="{{profile.facebook}}">
+                                    <img src="{% static 'img/facebook.png' %}" alt="#">
+                                </a>
+                            {% endif %}
+                            {% if profile.instgram %}
+                                    
+                                <a href="{{profile.instgram}}">
+                                    <img src="{% static 'img/ig-instagram-icon.svg' %}" alt="#">
+                                </a>
+                            {% endif %}
+                            {% if profile.whatsapp %}
+                                <a href="{{profile.whatsapp}}">
+                                    <img src="{% static 'img/wa-whatsapp-icon.svg' %}" alt="#">
+                                </a>
+                            {% endif %}
+                            {% if profile.linkedin %}
+                                <a href="{{profile.linkedin}}">
+                                    <img src="{% static 'img/linkedin-app-icon.svg' %}" alt="#">
+                                </a>
+                            {% endif %}
+                            {% if profile.twitter  %}
+                                <a href="{{profile.twitter}}">
+                                    <img src="{% static 'img/x-social-media-logo-icon.svg' %}" alt="#">
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                        <div class="other">
+                            <h5 class="content-view"> Follower : {{profile.count_follower}}</h5>
+                            <h5 class="content-view"> total view : {{profile.total_view}} </h5>
+                            <h5 class="content-like"> total likes : {{profile.total_likesr}} </h5>
+                            
+                            {% if user.is_authenticated %}
+                                {% if profile.user == request.user %}
+                                    <a class="upload" href="#">Upload</a>
+                                {% else %}
+                                    {% if request.user  in profile.follower.all %}
+                                        <a class="upload" href="{% url 'blog:un_follow' profile.slug %}">Un Follow</a>
+                                    {% else %}
+                                        <a class="upload" href="{% url 'blog:add_follow' profile.slug %}">Follow</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% else %}
+                            <a class="upload" href="{% url 'accounts:login' %}">Log IN</a>
+                            {% endif %}
+                        </div>
+                    
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock body %}

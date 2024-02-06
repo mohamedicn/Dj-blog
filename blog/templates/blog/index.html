@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %} 
+    <div class="blog">
+        {% for blog in blogs %}
+            <div class="main">
+                <div class="img">
+                    <a href="{% url 'blog:blog_content' blog.slug %}">
+                        <img src="{{blog.img.url}}" alt="#">
+                    </a>
+                </div>
+                <div class="content">
+                    <div class="all-text">
+                        <h5 class="content-main"><a href="{% url 'blog:blog_content' blog.slug %}" style="color: #eee;">{{blog.title}}</a></h5>
+                        <h5 class="content-text">{{blog.text|striptags|truncatewords:35}}</h5>
+                        
+                        <div class="categry">
+                            {% for cat in blog.catergryy.all %}
+                                <h5 class="cat">{{cat.title}}</h5>
+                            {% endfor %}
+                            <a href="{% url 'blog:blog_content' blog.slug %}" style="    color: #eee;
+                            border: 1px solid var(--five-color);
+                            padding: 10px;
+                            display: block;
+                            width: 40%;
+                            border-radius: 10px;
+                            height: 33px;
+                            justify-content: center;
+                            align-items: center;
+                            margin-left: 30px;
+                            display: flex;">View More ...</a>
+                        </div>
+                    </div>
+                    <div class="other">
+                        <h5 class="content-view"> {{blog.views}} view </h5>
+                        <h5 class="content-like"> {{blog.count_likes}} likes </h5>
+                        
+                        {% if user.is_authenticated %} 
+                            <a class="content-add-like" href="{% url 'blog:is_like' blog.slug %}"><i style="    font-size: 40px;    color: #eee;" class="fa-regular fa-heart"></i></a>
+                        {% else %}
+                            <a class="content-add-like" style="color: #eee;" href="{% url 'accounts:login' %}">Log In to can add like</a>
+                        {% endif %}
+                            
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+    </div>
+
+{% endblock body %}

@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %} 
+    <div class="user">
+        <div class="main">
+            <div class="img">
+                <a href="">
+                    {% if profile.image %}
+                        <img src="{{profile.image.url}}" alt="#">
+                    {% else %}
+                        <img src="{% static 'img/user_no_image.png' %}" alt="#">
+                    {% endif %}
+                </a>
+            </div>
+            <div class="content">
+                <div class="all-text">
+                    <h5 style="    font-size: 11px;" class="content-text"> @ {{profile.user.username}}</h5>
+                    <h5 class="content-main"> {{profile.user.first_name}} {{profile.user.last_name}}</h5>
+                    <div class="categry">
+                        {% if profile.facebook %}
+                            <a href="{{profile.facebook}}">
+                                <img src="{% static 'img/facebook.png' %}" alt="#">
+                            </a>
+                        {% endif %}
+                        {% if profile.instgram %}
+                                
+                            <a href="{{profile.instgram}}">
+                                <img src="{% static 'img/ig-instagram-icon.svg' %}" alt="#">
+                            </a>
+                        {% endif %}
+                        {% if profile.whatsapp %}
+                            <a href="{{profile.whatsapp}}">
+                                <img src="{% static 'img/wa-whatsapp-icon.svg' %}" alt="#">
+                            </a>
+                        {% endif %}
+                        {% if profile.linkedin %}
+                            <a href="{{profile.linkedin}}">
+                                <img src="{% static 'img/linkedin-app-icon.svg' %}" alt="#">
+                            </a>
+                        {% endif %}
+                        {% if profile.twitter  %}
+                            <a href="{{profile.twitter}}">
+                                <img src="{% static 'img/x-social-media-logo-icon.svg' %}" alt="#">
+                            </a>
+            {% endif %}
+                    </div>
+                </div>
+                <div class="other">
+                    <h5 class="content-view"> Follower : {{profile.count_follower}}</h5>
+                    <h5 class="content-view"> total view : {{profile.total_view}} </h5>
+                    <h5 class="content-like"> total likes : {{profile.total_likesr}} </h5>
+                    
+                    {% if user.is_authenticated %}
+                        {% if profile.user == request.user %}
+                            <a class="upload" href="{% url 'blog:create_blog' profile.slug %}">Upload</a>
+                        {% else %}
+                            {% if request.user  in profile.follower.all %}
+                                <a class="upload" href="{% url 'blog:un_follow' profile.slug %}">Un Follow</a>
+                            {% else %}
+                                <a class="upload" href="{% url 'blog:add_follow' profile.slug %}">Follow</a>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                    <a class="upload" href="{% url 'accounts:login' %}">Log IN</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="blog">
+        {% for blog in blogs %}
+            <div class="main">
+                <div class="img">
+                    <a href="{% url 'blog:blog_content' blog.slug %}">
+                        <img src="{{blog.img.url}}" alt="#">
+                    </a>
+                </div>
+                <div class="content">
+                    <div class="all-text">
+                        <h5 class="content-main"><a href="{% url 'blog:blog_content' blog.slug %}" style="color: #eee;">{{blog.title}}</a></h5>
+                        <h5 class="content-text">{{blog.text|striptags|truncatewords:35}}</h5>
+                        
+                        <div class="categry">
+                            {% for cat in blog.catergryy.all %}
+                                <h5 class="cat">{{cat.title}}</h5>
+                            {% endfor %}
+                            <a href="{% url 'blog:blog_content' blog.slug %}" style="    color: #eee;
+                            border: 1px solid var(--five-color);
+                            padding: 10px;
+                            display: block;
+                            width: 40%;
+                            border-radius: 10px;
+                            height: 33px;
+                            justify-content: center;
+                            align-items: center;
+                            margin-left: 30px;
+                            display: flex;">View More ...</a>
+                        </div>
+                    </div>
+                    <div class="other">
+                        <h5 class="content-view"> {{blog.views}} view </h5>
+                        <h5 class="content-like"> {{blog.count_likes}} likes </h5>
+                        {% if user.is_authenticated %} 
+                            <a class="content-add-like" href="{% url 'blog:is_like' blog.slug %}"><i style="    font-size: 40px;    color: #eee;" class="fa-regular fa-heart"></i></a>
+                        {% else %}
+                            <a class="content-add-like" style="color: #eee;" href="{% url 'accounts:login' %}">Log In to can add like</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock body %}
